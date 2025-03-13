@@ -100,7 +100,7 @@
         let names = ["前嶋", "後藤", "森", "尾野", "砂岡", "大橋", "孝", "裕和"];
         let roulette;
         let speed;
-        const selectedColors = ["#FFDEAD", "#B0E0E6", "#FFDAB9", "#E6E6FA", "#98FB98"];
+        const selectedColors = ["#FFDEAD"]; /*, "#B0E0E6", "#FFDAB9", "#E6E6FA", "#98FB98"];*/
 
         function updateNameList() {
             const nameList = document.getElementById('nameList');
@@ -167,7 +167,7 @@
                     }, speed);
                     speed += 50;
                 }
-            }, 200);
+            }, 500);
         };
 
         document.getElementById('resetButton').onclick = () => {
