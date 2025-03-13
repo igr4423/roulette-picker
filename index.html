@@ -8,25 +8,31 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin-top: 50px;
+            margin-top: 30px;
         }
 
         #display {
             font-size: 40px;
-            margin: 30px;
-            padding: 20px;
+            margin: 20px;
+            padding: 15px;
             border: 2px solid #444;
             display: inline-block;
             width: 300px;
             height: 100px;
             line-height: 100px;
             border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        #suffix {
+            font-size: 24px;
+            margin-left: 5px;
         }
 
         button {
-            font-size: 20px;
-            padding: 10px 20px;
-            margin: 10px;
+            font-size: 18px;
+            padding: 8px 16px;
+            margin: 5px;
             cursor: pointer;
         }
 
@@ -41,6 +47,17 @@
             color: white;
             border: none;
         }
+
+        .selected {
+            background-color: #ffeb3b;
+        }
+
+        textarea {
+            width: 80%;
+            height: 100px;
+            margin-top: 20px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -48,25 +65,55 @@
     <button id="startButton">スタート</button>
     <button id="stopButton" disabled>ストップ</button>
 
+    <div>
+        <textarea id="nameList">佐藤\n鈴木\n高橋\n田中\n伊藤\n渡辺\n山本\n中村</textarea><br>
+        <button onclick="updateList()">リスト更新</button>
+    </div>
+
     <script>
-        const names = ["佐藤", "鈴木", "高橋", "田中", "伊藤", "渡辺", "山本", "中村"];
+        let names = ["佐藤", "鈴木", "高橋", "田中", "伊藤", "渡辺", "山本", "中村"];
         let interval;
+        let speed = 100;
 
-        document.getElementById('startButton').onclick = () => {
-            document.getElementById('startButton').disabled = true;
-            document.getElementById('stopButton').disabled = false;
-
+        function startRoulette() {
+            document.getElementById('display').classList.remove('selected');
             interval = setInterval(() => {
                 const randomName = names[Math.floor(Math.random() * names.length)];
-                document.getElementById('display').textContent = randomName;
-            }, 100);
+                document.getElementById('display').innerHTML = `${randomName}<span id=\"suffix\">さん</span>`;
+            }, speed);
+        }
+
+        document.getElementById('startButton').onclick = () => {
+            if (names.length === 0) {
+                alert("リストに名前がありません！");
+                return;
+            }
+            document.getElementById('startButton').disabled = true;
+            document.getElementById('stopButton').disabled = false;
+            speed = 100;
+            startRoulette();
         };
 
         document.getElementById('stopButton').onclick = () => {
-            clearInterval(interval);
-            document.getElementById('startButton').disabled = false;
             document.getElementById('stopButton').disabled = true;
+            const slowDown = setInterval(() => {
+                clearInterval(interval);
+                speed += 50;
+                if (speed >= 500) {
+                    clearInterval(slowDown);
+                    document.getElementById('display').classList.add('selected');
+                    document.getElementById('startButton').disabled = false;
+                } else {
+                    startRoulette();
+                }
+            }, 400);
         };
+
+        function updateList() {
+            const input = document.getElementById('nameList').value;
+            names = input.split('\n').map(name => name.trim()).filter(name => name);
+            alert("リストを更新しました！");
+        }
     </script>
 </body>
 </html>
