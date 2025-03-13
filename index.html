@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>名前選択ルーレット</title>
+    <title>担当者決定ルーレット</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,10 +52,31 @@
             background-color: #ffeb3b;
         }
 
-        textarea {
-            width: 80%;
-            height: 100px;
+        #settingsPanel {
             margin-top: 20px;
+            display: none;
+            border: 1px solid #ccc;
+            padding: 15px;
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 8px;
+        }
+
+        #settingsPanel ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #settingsPanel ul li {
+            padding: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #settingsPanel input {
+            width: 70%;
+            padding: 5px;
             font-size: 16px;
         }
     </style>
@@ -64,56 +85,85 @@
     <div id="display">---</div><br>
     <button id="startButton">スタート</button>
     <button id="stopButton" disabled>ストップ</button>
+    <button onclick="toggleSettings()">設定 ⚙️</button>
 
-    <div>
-        <textarea id="nameList">佐藤\n鈴木\n高橋\n田中\n伊藤\n渡辺\n山本\n中村</textarea><br>
-        <button onclick="updateList()">リスト更新</button>
+    <div id="settingsPanel" style="display:none;">
+        <ul id="nameList"></ul>
+        <input type="text" id="newName" placeholder="新しい名前">
+        <button onclick="addName()">追加</button>
+        <button onclick="toggleSettings()">閉じる</button>
     </div>
 
     <script>
-        let names = ["佐藤", "鈴木", "高橋", "田中", "伊藤", "渡辺", "山本", "中村"];
-        let interval;
-        let speed = 100;
+        let names = ["前嶋", "後藤", "森", "尾野", "砂岡", "大橋", "孝", "裕和"];
+        let interval, speed;
 
-        function startRoulette() {
-            document.getElementById('display').classList.remove('selected');
-            interval = setInterval(() => {
-                const randomName = names[Math.floor(Math.random() * names.length)];
-                document.getElementById('display').innerHTML = `${randomName}<span id=\"suffix\">さん</span>`;
-            }, speed);
+        function renderList() {
+            const listElement = document.getElementById('settingsPanel').querySelector('ul');
+            listElement.innerHTML = '';
+            names.forEach((name, index) => {
+                listItem = document.createElement('li');
+                listItem.textContent = name;
+                listItem.onclick = () => removeName(index);
+                listItem.style.cursor = 'pointer';
+                listItem.title = 'クリックで削除';
+                listItem.style.margin = '4px';
+                listElement.appendChild(listItem);
+            });
+        }
+
+        function addName() {
+            const newName = document.querySelector('#settingsPanel input').value;
+            if(newName && !names.includes(newName)){
+                names.push(newName);
+                updateNameList();
+            }
+            document.querySelector('#newName').value = '';
+        }
+
+        function removeName(index) {
+            names.splice(index, 1);
+            updateNameList();
+        }
+
+        function updateNameList() {
+            const list = document.querySelector('#settingsPanel ul');
+            listItem.innerHTML = '';
+            names.forEach((name, index) => {
+                const li = document.createElement('li');
+                li.textContent = name;
+                li.onclick = () => removeName(index);
+                li.style.cursor = 'pointer';
+                li.title = 'クリックで削除';
+                list.appendChild(li);
+            });
+        }
+
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
         }
 
         document.getElementById('startButton').onclick = () => {
-            if (names.length === 0) {
-                alert("リストに名前がありません！");
-                return;
-            }
+            if (names.length === 0) return alert('名前を追加してください');
             document.getElementById('startButton').disabled = true;
             document.getElementById('stopButton').disabled = false;
-            speed = 100;
-            startRoulette();
-        };
+            document.getElementById('settingsPanel').style.display = 'none';
+
+            roulette = setInterval(() => {
+                const randomName = names[Math.floor(Math.random() * names.length)];
+                document.getElementById('display').innerHTML = `${randomName}<span id=\"suffix\">さん</span>`;
+            }, 100);
+        }
 
         document.getElementById('stopButton').onclick = () => {
+            clearInterval(roulette);
+            document.getElementById('display').classList.add('selected');
+            document.getElementById('startButton').disabled = false;
             document.getElementById('stopButton').disabled = true;
-            const slowDown = setInterval(() => {
-                clearInterval(interval);
-                speed += 50;
-                if (speed >= 500) {
-                    clearInterval(slowDown);
-                    document.getElementById('display').classList.add('selected');
-                    document.getElementById('startButton').disabled = false;
-                } else {
-                    startRoulette();
-                }
-            }, 400);
         };
 
-        function updateList() {
-            const input = document.getElementById('nameList').value;
-            names = input.split('\n').map(name => name.trim()).filter(name => name);
-            alert("リストを更新しました！");
-        }
+        updateNameList();
     </script>
 </body>
 </html>
