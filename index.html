@@ -22,6 +22,7 @@
             line-height: 100px;
             border-radius: 10px;
             transition: background-color 0.3s ease;
+            background-color: white;
         }
 
         #suffix {
@@ -52,10 +53,6 @@
             background-color: #777;
             color: white;
             border: none;
-        }
-
-        .selected {
-            background-color: #CDEFFD;
         }
 
         #settingsPanel {
@@ -132,7 +129,7 @@
 
         function toggleSettings() {
             const panel = document.getElementById('settingsPanel');
-            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
         }
 
         document.getElementById('startButton').onclick = () => {
@@ -145,6 +142,7 @@
             document.getElementById('stopButton').disabled = false;
             document.getElementById('settingsPanel').style.display = 'none';
             document.getElementById('display').classList.remove('selected');
+            document.getElementById('display').style.backgroundColor = 'white';
             speed = 100;
 
             roulette = setInterval(() => {
@@ -169,25 +167,20 @@
                     }, speed);
                     speed += 50;
                 }
-            }, 300);
+            }, 200);
         };
 
         document.getElementById('resetButton').onclick = () => {
             clearInterval(roulette);
             document.getElementById('display').innerHTML = '---';
-            document.getElementById('display').classList.remove('selected');
+            document.getElementById('display').style.backgroundColor = 'white';
             document.getElementById('startButton').disabled = false;
             document.getElementById('stopButton').disabled = true;
         };
 
         updateNameList();
 
-        function toggleSettings() {
-            const panel = document.getElementById('settingsPanel');
-            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-        }
-
-        updateNameList();
+        document.getElementById('settingsPanel').style.display = 'none';
     </script>
 </body>
 </html>
