@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>名前選択ルーレット</title>
+    <title>担当者選択ルーレット</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -131,7 +131,7 @@
 
         function toggleSettings() {
             const panel = document.getElementById('settingsPanel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
         }
 
         document.getElementById('startButton').onclick = () => {
@@ -156,8 +156,8 @@
             document.getElementById('stopButton').disabled = true;
             const slowDown = setInterval(() => {
                 clearInterval(roulette);
-                speed += 50;
-                if(speed >= 800) {
+                speed += 70;
+                if(speed >= 400) {
                     clearInterval(slowDown);
                     document.getElementById('display').classList.add('selected');
                     document.getElementById('startButton').disabled = false;
@@ -167,7 +167,7 @@
                         document.getElementById('display').innerHTML = `${randomName}<span id="suffix">さん</span>`;
                     }, speed);
                 }
-            }, 400);
+            }, 300);
         };
 
         document.getElementById('resetButton').onclick = () => {
@@ -177,6 +177,13 @@
             document.getElementById('startButton').disabled = false;
             document.getElementById('stopButton').disabled = true;
         };
+
+        updateNameList();
+
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
 
         updateNameList();
     </script>
