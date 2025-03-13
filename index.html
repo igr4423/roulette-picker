@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>名前選択ルーレット</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #display {
+            font-size: 40px;
+            margin: 30px;
+            padding: 20px;
+            border: 2px solid #444;
+            display: inline-block;
+            width: 300px;
+            height: 100px;
+            line-height: 100px;
+            border-radius: 10px;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        #startButton {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        #stopButton {
+            background-color: #f44336;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="display">---</div><br>
+    <button id="startButton">スタート</button>
+    <button id="stopButton" disabled>ストップ</button>
+
+    <script>
+        const names = ["佐藤", "鈴木", "高橋", "田中", "伊藤", "渡辺", "山本", "中村"];
+        let interval;
+
+        document.getElementById('startButton').onclick = () => {
+            document.getElementById('startButton').disabled = true;
+            document.getElementById('stopButton').disabled = false;
+
+            interval = setInterval(() => {
+                const randomName = names[Math.floor(Math.random() * names.length)];
+                document.getElementById('display').textContent = randomName;
+            }, 100);
+        };
+
+        document.getElementById('stopButton').onclick = () => {
+            clearInterval(interval);
+            document.getElementById('startButton').disabled = false;
+            document.getElementById('stopButton').disabled = true;
+        };
+    </script>
+</body>
+</html>
